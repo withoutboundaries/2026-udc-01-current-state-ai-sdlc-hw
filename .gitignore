@@ -29,5 +29,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Local repomix artifact (Task 3 measurement)
+repomix-output.xml
+
 # Windows Git Bash safety: prevent accidental NUL device files
 nul

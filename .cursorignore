@@ -1,0 +1,18 @@
+# Dependencies — не тягнути в контекст агента
+**/node_modules/
+
+# Builds / артефакти збірки
+**/.next/
+**/dist/
+**/build/
+**/out/
+**/coverage/
+
+# Lock-файли — великі, мало корисні для генерації коду
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+# Секрети та env
+**/.env
+**/.env.*
