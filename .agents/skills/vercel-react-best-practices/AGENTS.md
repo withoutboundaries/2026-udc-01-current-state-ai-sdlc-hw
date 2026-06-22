@@ -3707,7 +3707,7 @@ function Comp() {
 }
 ```
 
-**Correct: once per app load**
+**Correct: once per app load (guard in component)**
 
 ```tsx
 let didInit = false
@@ -3723,6 +3723,39 @@ function Comp() {
   // ...
 }
 ```
+
+**Best Practice: module-level init (most robust)**
+
+Move one-time startup out of components. Call it from the app entry (root layout or client bootstrap) so remounts and Strict Mode never re-run side effects.
+
+```tsx
+// src/lib/init.ts
+let didInit = false
+
+export function initializeApp() {
+  if (didInit) return
+  didInit = true
+  loadFromStorage()
+  checkAuthToken()
+}
+```
+
+```tsx
+// src/app/layout.tsx (or client entry module)
+import { initializeApp } from '@/lib/init'
+
+initializeApp()
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+For browser-only APIs (`localStorage`, `window`), keep `initializeApp()` in a `"use client"` module or guard with `typeof window !== 'undefined'`.
 
 Reference: [https://react.dev/learn/you-might-not-need-an-effect#initializing-the-application](https://react.dev/learn/you-might-not-need-an-effect#initializing-the-application)
 
