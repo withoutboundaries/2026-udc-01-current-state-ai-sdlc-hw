@@ -27,3 +27,33 @@ function Sidebar() {
   return <nav className={isMobile ? 'mobile' : 'desktop'} />
 }
 ```
+
+**Reference (native `matchMedia` hook):**
+
+`useWindowWidth()` / `useMediaQuery()` above are placeholders. Prefer a small hook backed by the platform API:
+
+```tsx
+import { useEffect, useState } from 'react'
+
+function useMediaQueryMatch(query: string): boolean {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    setMatches(mq.matches)
+
+    const handler = (event: MediaQueryListEvent) => setMatches(event.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [query])
+
+  return matches
+}
+
+function Sidebar() {
+  const isMobile = useMediaQueryMatch('(max-width: 767px)')
+  return <nav className={isMobile ? 'mobile' : 'desktop'} />
+}
+```
+
+Libraries such as `react-use` / `ahooks` expose similar hooks; the native version keeps bundle size minimal.

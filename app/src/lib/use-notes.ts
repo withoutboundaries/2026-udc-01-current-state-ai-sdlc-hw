@@ -2,7 +2,7 @@ import { useCallback, useSyncExternalStore } from "react";
 
 import type { Note } from "@/types/note";
 
-import { loadNotes, saveNotes } from "./notes-storage";
+import { loadNotes, saveNotes } from "@/lib/notes-storage";
 
 const listeners = new Set<() => void>();
 
@@ -32,9 +32,17 @@ function getServerSnapshot(): Note[] {
 }
 
 function updateNotes(updater: (current: Note[]) => Note[]) {
-  const next = updater(getNotesSnapshot());
+  const current = getNotesSnapshot();
+  const next = updater(current);
   notesCache = next;
-  saveNotes(next);
+
+  try {
+    saveNotes(next);
+  } catch {
+    notesCache = current;
+    return;
+  }
+
   listeners.forEach((listener) => listener());
 }
 

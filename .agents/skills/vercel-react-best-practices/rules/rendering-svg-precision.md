@@ -24,5 +24,16 @@ Reduce SVG coordinate precision to decrease file size. The optimal precision dep
 **Automate with SVGO:**
 
 ```bash
+# Safe default for icons
 npx svgo --precision=1 --multipass icon.svg
+
+# If paths animate or must stay exact, disable aggressive path rewriting
+npx svgo --precision=1 --multipass --disable=convertPathData icon.svg
 ```
+
+**Typical savings:** a 24×24 icon path block often drops from ~500 bytes to ~400 bytes at `precision=1` (roughly 15–25% smaller).
+
+**ViewBox guidance:**
+
+- Small viewBox (e.g. `0 0 100 100`): `precision=1` is usually enough
+- Large viewBox (e.g. `0 0 1000 1000`): prefer `precision=2` to avoid visible shape drift

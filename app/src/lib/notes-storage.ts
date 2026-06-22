@@ -65,5 +65,10 @@ export function saveNotes(notes: Note[]): void {
     notes,
   };
 
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  } catch {
+    console.error("[notes-storage] Failed to save notes to localStorage");
+    throw new Error("Failed to save notes");
+  }
 }
